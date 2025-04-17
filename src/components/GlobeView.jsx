@@ -8,6 +8,27 @@ const typeColors = {
   spy: "orange",
 };
 
+const antennas = [
+  {
+    name: "Goldstone DSN",
+    lat: 35.2472,
+    lng: -116.7933,
+    color: "white"
+  },
+  {
+    name: "Madrid DSN",
+    lat: 40.4314,
+    lng: -4.2486,
+    color: "white"
+  },
+  {
+    name: "Canberra DSN",
+    lat: -35.3985,
+    lng: 148.9819,
+    color: "white"
+  }
+];
+
 const GlobeView = ({ satellites }) => {
   const globeEl = useRef(null);
   const globeInstance = useRef(null);
@@ -27,15 +48,23 @@ const GlobeView = ({ satellites }) => {
   }, []);
 
   useEffect(() => {
-    if (!globeInstance.current || satellites.length === 0) return;
+    if (!globeInstance.current) return;
 
-    const formattedPoints = satellites.map((sat) => ({
+    const satellitePoints = satellites.map((sat) => ({
       lat: sat.position?.lat || 0,
       lng: sat.position?.long || 0,
-      color: typeColors[sat.type?.toLowerCase()] || "gray",
+      color: typeColors[sat.type?.toLowerCase()] || "gray"
     }));
 
-    globeInstance.current.pointsData(formattedPoints);
+    const antennaPoints = antennas.map((ant) => ({
+      lat: ant.lat,
+      lng: ant.lng,
+      color: ant.color
+    }));
+
+    const combinedPoints = [...satellitePoints, ...antennaPoints];
+
+    globeInstance.current.pointsData(combinedPoints);
   }, [satellites]);
 
   return <div ref={globeEl} style={{ width: "100%", height: "100vh" }} />;
