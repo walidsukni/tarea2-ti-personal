@@ -11,6 +11,10 @@ function App() {
   const handleMessage = useCallback((message) => {
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
+
+      // 👇 LOG TEMPORAL para ver los IDs de satélites
+      const ids = message.satellites.map(s => s.satellite_id);
+      console.log("🛰️ IDs de satélites recibidos:", [...new Set(ids)]);
     }
 
     if (message.type === "COMM") {
