@@ -13,9 +13,11 @@ function App() {
   
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
-      const types = message.satellites.map(s => s.type).filter(Boolean);
-      console.log("Tipos de satélites únicos:", [...new Set(types)]);
+    
+      const types = message.satellites.map(sat => sat.type).filter(Boolean);
+      console.log(" Tipos únicos de satélites recibidos:", [...new Set(types)]);
     }
+    
   
     if (message.type === "COMM") {
       setMessages((prev) => [...prev, message.message]);
