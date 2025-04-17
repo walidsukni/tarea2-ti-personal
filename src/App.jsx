@@ -9,15 +9,17 @@ function App() {
   const [wsInstance, setWsInstance] = useState(null);
 
   const handleMessage = useCallback((message) => {
+    console.log("Mensaje recibido:", message); 
+
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
 
-      // 👇 LOG TEMPORAL para ver los IDs de satélites
       const ids = message.satellites.map(s => s.satellite_id);
-      console.log("🛰️ IDs de satélites recibidos:", [...new Set(ids)]);
+      console.log("🛰️ Satélites recibidos:", [...new Set(ids)]);
     }
 
     if (message.type === "COMM") {
+      console.log("Mensaje COMM:", message.message);
       setMessages((prev) => [...prev, message.message]);
     }
   }, []);
