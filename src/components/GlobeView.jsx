@@ -35,7 +35,7 @@ const GlobeView = ({ satellites }) => {
     const formattedPoints = satellites.map((sat) => ({
       lat: sat.position?.lat || 0,
       lng: sat.position?.long || 0,
-      color: typeColors[sat.type] || "gray",
+      color: typeColors[sat.type?.toUpperCase()] || "gray",
     }));
 
     globeInstance.current.pointsData(formattedPoints);
