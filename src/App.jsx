@@ -12,19 +12,12 @@ function App() {
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
 
-      if (message.satellites?.length > 0) {
-        console.log("📦 Satélite ejemplo recibido:", message.satellites[0]);
-
-        const types = message.satellites
-          .map(sat => sat.type)
-          .filter(Boolean);
-
-        console.log("Tipos únicos de satélites recibidos:", [...new Set(types)]);
-      }
+      // 👇 LOG TEMPORAL para ver los IDs de satélites
+      const ids = message.satellites.map(s => s.satellite_id);
+      console.log("🛰️ IDs de satélites recibidos:", [...new Set(ids)]);
     }
 
     if (message.type === "COMM") {
-      console.log("Mensaje COMM recibido:", message.message);
       setMessages((prev) => [...prev, message.message]);
     }
   }, []);
