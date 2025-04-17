@@ -9,34 +9,35 @@ const typeColors = {
 };
 
 const GlobeView = ({ satellites }) => {
-  const globeEl = useRef();
+  const globeEl = useRef(null);
+  const globeInstance = useRef(null);
 
+  // Crear globo una sola vez
   useEffect(() => {
-    const world = Globe()(globeEl.current)
+    const globe = Globe()(globeEl.current)
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
-      .pointAltitude("size")
-      .pointColor("color")
-      .pointsData([]); // inicial vacío
+      .pointAltitude(0.2)
+      .pointColor('color')
+      .pointsData([]); // Inicial vacío
 
-    globeEl.current.world = world;
+    globeInstance.current = globe;
+    globe.pointOfView({ altitude: 2.5 });
 
-    return () => world._destructor?.();
+    return () => globe._destructor?.();
   }, []);
 
-  // Cada vez que cambian los satélites, actualizamos puntos
+  // Cuando llegan los satélites desde props
   useEffect(() => {
-    if (!globeEl.current?.world) return;
+    if (!globeInstance.current || satellites.length === 0) return;
 
-    const formatted = satellites.map((sat) => ({
-      lat: sat.position.lat,
-      lng: sat.position.long,
-      size: 0.2, // tamaño visual
+    const formattedPoints = satellites.map((sat) => ({
+      lat: sat.position?.lat || 0,
+      lng: sat.position?.long || 0,
       color: typeColors[sat.type] || "gray",
-      label: sat.name,
     }));
 
-    globeEl.current.world.pointsData(formatted);
+    globeInstance.current.pointsData(formattedPoints);
   }, [satellites]);
 
   return <div ref={globeEl} style={{ width: "100%", height: "100vh" }} />;
