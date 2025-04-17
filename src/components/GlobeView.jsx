@@ -29,6 +29,15 @@ const antennas = [
   }
 ];
 
+const getTypeFromId = (id) => {
+  if (!id) return null;
+  if (id.startsWith("GPS")) return "NAV"; 
+  if (id.startsWith("COM")) return "COM";
+  if (id.startsWith("SCI")) return "SCI";
+  if (id.startsWith("SPY")) return "SPY";
+  return null;
+};
+
 const GlobeView = ({ satellites }) => {
   const globeEl = useRef(null);
   const globeInstance = useRef(null);
@@ -51,11 +60,11 @@ const GlobeView = ({ satellites }) => {
     if (!globeInstance.current) return;
 
     const satellitePoints = satellites.map((sat) => {
-      const typeKey = sat.type?.toUpperCase?.(); // Manejo robusto
+      const inferredType = getTypeFromId(sat.satellite_id);
       return {
         lat: sat.position?.lat || 0,
         lng: sat.position?.long || 0,
-        color: typeColors[typeKey] || "gray"
+        color: typeColors[inferredType] || "gray"
       };
     });
 
