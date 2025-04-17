@@ -30,13 +30,19 @@ const antennas = [
 ];
 
 const getTypeFromId = (id) => {
-  if (!id) return null;
-  if (id.startsWith("GPS")) return "NAV"; 
-  if (id.startsWith("COM")) return "COM";
-  if (id.startsWith("SCI")) return "SCI";
-  if (id.startsWith("SPY")) return "SPY";
-  return null;
-};
+    if (!id) return null;
+    if (id.startsWith("GPS")) return "NAV";
+    if (id.startsWith("COM")) return "COM";
+    if (id.startsWith("SCI")) return "SCI";
+    if (id.startsWith("SPY")) return "SPY";
+  
+    if (id.startsWith("SEN")) return "NAV";     
+    if (id.startsWith("STL")) return "SCI";    
+    if (id.startsWith("NRO")) return "SPY";     
+  
+    return null;
+  };
+  
 
 const GlobeView = ({ satellites }) => {
   const globeEl = useRef(null);
