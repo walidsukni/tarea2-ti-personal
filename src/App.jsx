@@ -1,33 +1,22 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import GlobeView from "./components/GlobeView";
-import Chat from "./components/Chat";
 import { useWebSocket } from "./hooks/useWebSocket";
 
 function App() {
   const [satellites, setSatellites] = useState([]);
-  const ws = useRef(null);
 
   const handleMessage = (message) => {
-    if (message.type === "SATELLITE-STATUS") {
-      setSatellites(prev => {
-        const updatedSatellites = prev.filter(sat => sat.satellite_id !== message.satellite.satellite_id);
-        return [...updatedSatellites, message.satellite];
-      });
-    }
+    console.log("Mensaje recibido:", message);
 
-    if (message.type === "SATELLITES") {
+    if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
+      console.log("Satélites actualizados:", message.satellites.length);
     }
   };
 
-  ws.current = useWebSocket(handleMessage);
+  useWebSocket(handleMessage);
 
-  return (
-    <>
-      <GlobeView satellites={satellites} />
-      <Chat ws={ws.current} />
-    </>
-  );
+  return <GlobeView satellites={satellites} />;
 }
 
 export default App;
