@@ -7,10 +7,20 @@ const Chat = ({ ws, messages }) => {
 
   const sendMessage = () => {
     if (ws?.readyState === WebSocket.OPEN && input.trim() !== "") {
+      const outgoing = {
+        station_id: "Tú", // o tu ID real
+        date: new Date().toLocaleString(),
+        level: "info",
+        content: input
+      };
+  
       ws.send(JSON.stringify({ type: "COMM", message: input }));
+      setMessages((prev) => [...prev, outgoing]);
       setInput("");
     }
   };
+  
+  
 
   // Auto scroll to bottom on new message
   useEffect(() => {
