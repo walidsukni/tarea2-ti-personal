@@ -9,14 +9,17 @@ function App() {
   const [wsInstance, setWsInstance] = useState(null);
 
   const handleMessage = useCallback((message) => {
+    console.log("Mensaje recibido:", message); // 🔥 este log es esencial
+  
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
     }
-
+  
     if (message.type === "COMM") {
       setMessages((prev) => [...prev, message.message]);
     }
   }, []);
+  
 
   const ws = useWebSocket(handleMessage);
   if (ws && !wsInstance) setWsInstance(ws);
