@@ -1,28 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 
-const Chat = ({ ws, messages }) => {
+const Chat = ({ ws, messages, setMessages }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);
 
   const sendMessage = () => {
     if (ws?.readyState === WebSocket.OPEN && input.trim() !== "") {
-      const outgoing = {
-        station_id: "Tú", // o tu ID real
-        date: new Date().toLocaleString(),
+      const message = {
+        station_id: "YOU",
+        content: input,
         level: "info",
-        content: input
+        date: new Date().toLocaleString()
       };
-  
+
       ws.send(JSON.stringify({ type: "COMM", message: input }));
-      setMessages((prev) => [...prev, outgoing]);
+      setMessages((prev) => [...prev, message]);
       setInput("");
     }
   };
-  
-  
 
-  // Auto scroll to bottom on new message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -35,8 +32,9 @@ const Chat = ({ ws, messages }) => {
             key={i}
             className={`chat-message ${msg.level === "warn" ? "warn" : ""}`}
           >
-            <strong>{msg.station_id || msg.satellite_id}</strong> [{msg.date}]:{" "}
-            {msg.content}
+            <strong>{msg.station_id || msg.satellite_id || "??"}</strong>
+            {" [" + (msg.date || "sin fecha") + "]: "}
+            {msg.content || JSON.stringify(msg)}
           </div>
         ))}
         <div ref={chatEndRef} />

@@ -9,8 +9,6 @@ function App() {
   const [wsInstance, setWsInstance] = useState(null);
 
   const handleMessage = useCallback((message) => {
-    console.log("Mensaje recibido:", message);
-
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
     }
@@ -21,12 +19,12 @@ function App() {
   }, []);
 
   const ws = useWebSocket(handleMessage);
-  if (ws && !wsInstance) setWsInstance(ws); // guardar instancia solo una vez
+  if (ws && !wsInstance) setWsInstance(ws);
 
   return (
     <>
       <GlobeView satellites={satellites} />
-      {wsInstance && <Chat ws={wsInstance} messages={messages} />}
+      {wsInstance && <Chat ws={wsInstance} messages={messages} setMessages={setMessages} />}
     </>
   );
 }
