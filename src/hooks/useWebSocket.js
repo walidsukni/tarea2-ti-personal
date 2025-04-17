@@ -3,30 +3,45 @@ import { useEffect, useRef } from "react";
 const WS_URL = "wss://tarea-2.2025-1.tallerdeintegracion.cl/connect";
 
 export const useWebSocket = (onMessage) => {
-  const ws = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    ws.current = new WebSocket(WS_URL);
+    const socket = new WebSocket(WS_URL);
+    socketRef.current = socket;
 
-    ws.current.onopen = () => {
-      console.log("WebSocket conectado");
-      ws.current.send(JSON.stringify({
+    socket.onopen = () => {
+      console.log("✅ WebSocket conectado");
+
+      // ENVÍA AUTENTICACIÓN AL SERVIDOR
+      socket.send(JSON.stringify({
         type: "AUTH",
-        name: "TuNombre",
-        student_number: "123456789"
+        name: "Walid Sukni",        
+        student_number: "18626084"  
       }));
     };
 
-    ws.current.onmessage = (e) => {
-      const message = JSON.parse(e.data);
-      onMessage(message);
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log("🔁 Mensaje recibido:", message);
+        onMessage(message);
+      } catch (err) {
+        console.error("❌ Error al parsear mensaje:", err);
+      }
     };
 
-    ws.current.onclose = () => console.log("WebSocket cerrado");
-    ws.current.onerror = (e) => console.error("Error WebSocket", e);
+    socket.onerror = (error) => {
+      console.error("⚠️ Error WebSocket:", error);
+    };
 
-    return () => ws.current.close();
+    socket.onclose = () => {
+      console.warn("🔌 WebSocket cerrado");
+    };
+
+    return () => {
+      socket.close();
+    };
   }, [onMessage]);
 
-  return ws.current;
+  return socketRef;
 };

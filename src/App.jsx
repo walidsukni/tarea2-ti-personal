@@ -6,11 +6,12 @@ function App() {
   const [satellites, setSatellites] = useState([]);
 
   const handleMessage = (message) => {
+    console.log("🔁 Mensaje recibido:", message); // 👈 importante
+
     if (message.type === "SATELLITES") {
       setSatellites(message.satellites);
+      console.log("📡 Satélites actualizados:", message.satellites.length);
     }
-
-    // Puedes ir agregando más eventos aquí...
   };
 
   useWebSocket(handleMessage);
