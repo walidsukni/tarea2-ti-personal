@@ -3,11 +3,12 @@ import Globe from "globe.gl";
 
 
 const typeColors = {
-  COM: "red",
-  SCI: "blue",
-  NAV: "green",
-  SPY: "orange",
-};
+    com: "red",
+    sci: "blue",
+    nav: "green",
+    spy: "orange",
+  };
+  
 
 const GlobeView = ({ satellites }) => {
   const globeEl = useRef(null);
@@ -35,7 +36,7 @@ const GlobeView = ({ satellites }) => {
     const formattedPoints = satellites.map((sat) => ({
       lat: sat.position?.lat || 0,
       lng: sat.position?.long || 0,
-      color: typeColors[sat.type?.toUpperCase()] || "gray",
+      color: typeColors[sat.type?.toLowerCase()] || "gray",
     }));
 
     globeInstance.current.pointsData(formattedPoints);

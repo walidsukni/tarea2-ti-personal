@@ -6,12 +6,15 @@ function App() {
   const [satellites, setSatellites] = useState([]);
 
   const handleMessage = (message) => {
-    console.log("🔁 Mensaje recibido:", message);
+    console.log("Mensaje recibido:", message);
 
-    // Usamos POSITION_UPDATE para mantener la lista actualizada
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
-      console.log("📡 Satélites actualizados:", message.satellites.length);
+      console.log("Satélites actualizados:", message.satellites.length);
+
+      // Log de los tipos reales de satélites
+      const types = message.satellites.map(sat => sat.type?.toLowerCase());
+      console.log("Tipos recibidos:", Array.from(new Set(types)));
     }
   };
 
