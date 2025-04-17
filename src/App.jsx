@@ -6,9 +6,10 @@ function App() {
   const [satellites, setSatellites] = useState([]);
 
   const handleMessage = (message) => {
-    console.log("🔁 Mensaje recibido:", message); // 👈 importante
+    console.log("🔁 Mensaje recibido:", message);
 
-    if (message.type === "SATELLITES") {
+    // Usamos POSITION_UPDATE para mantener la lista actualizada
+    if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
       console.log("📡 Satélites actualizados:", message.satellites.length);
     }

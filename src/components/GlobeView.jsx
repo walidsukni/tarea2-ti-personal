@@ -1,33 +1,34 @@
 import { useEffect, useRef } from "react";
 import Globe from "globe.gl";
 
+
 const typeColors = {
   COM: "red",
   SCI: "blue",
   NAV: "green",
-  SPY: "orange"
+  SPY: "orange",
 };
 
 const GlobeView = ({ satellites }) => {
   const globeEl = useRef(null);
   const globeInstance = useRef(null);
 
-  // Crear globo una sola vez
+  // Inicializa el globo solo una vez
   useEffect(() => {
     const globe = Globe()(globeEl.current)
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
       .pointAltitude(0.2)
       .pointColor('color')
-      .pointsData([]); // Inicial vacío
+      .pointsData([]); // iniciar vacío
 
+    globe.pointOfView({ altitude: 2.5 }, 0);
     globeInstance.current = globe;
-    globe.pointOfView({ altitude: 2.5 });
 
     return () => globe._destructor?.();
   }, []);
 
-  // Cuando llegan los satélites desde props
+  // Cada vez que se actualizan los satélites, actualiza puntos en globo
   useEffect(() => {
     if (!globeInstance.current || satellites.length === 0) return;
 
