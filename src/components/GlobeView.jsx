@@ -34,10 +34,11 @@ const GlobeView = ({ satellites }) => {
     if (!globeInstance.current || satellites.length === 0) return;
 
     const formattedPoints = satellites.map((sat) => ({
-      lat: sat.position?.lat || 0,
-      lng: sat.position?.long || 0,
-      color: typeColors[sat.type?.toLowerCase()] || "gray",
-    }));
+        lat: sat.position?.lat || 0,
+        lng: sat.position?.long || 0,
+        color: typeColors[sat.type?.toLowerCase()] || "gray",
+      }));
+      
 
     globeInstance.current.pointsData(formattedPoints);
   }, [satellites]);

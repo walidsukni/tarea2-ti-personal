@@ -10,7 +10,7 @@ export const useWebSocket = (onMessage) => {
     socketRef.current = socket;
 
     socket.onopen = () => {
-      console.log("✅ WebSocket conectado");
+      console.log("WebSocket conectado");
 
       // ENVÍA AUTENTICACIÓN AL SERVIDOR
       socket.send(JSON.stringify({
