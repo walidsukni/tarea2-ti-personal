@@ -3,51 +3,30 @@ import { useEffect, useRef } from "react";
 const WS_URL = "wss://tarea-2.2025-1.tallerdeintegracion.cl/connect";
 
 export const useWebSocket = (onMessage) => {
-  const socketRef = useRef(null);
-  const retryTimeoutRef = useRef(null);
+  const ws = useRef(null);
 
   useEffect(() => {
-    const connect = () => {
-      const socket = new WebSocket(WS_URL);
-      socketRef.current = socket;
+    ws.current = new WebSocket(WS_URL);
 
-      socket.onopen = () => {
-        console.log("✅ WebSocket conectado");
-
-        // Autenticación
-        socket.send(JSON.stringify({
-          type: "AUTH",
-          name: "Walid Sukni",
-          student_number: "20251234"
-        }));
-      };
-
-      socket.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          onMessage(message);
-        } catch (err) {
-          console.error("❌ Error al parsear mensaje:", err);
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error("⚠️ WebSocket error:", error);
-      };
-
-      socket.onclose = () => {
-        console.warn("🔌 WebSocket cerrado. Reintentando en 5 segundos...");
-        retryTimeoutRef.current = setTimeout(connect, 5000); // Reintenta después de 5s
-      };
+    ws.current.onopen = () => {
+      console.log("WebSocket conectado");
+      ws.current.send(JSON.stringify({
+        type: "AUTH",
+        name: "TuNombreReal",
+        student_number: "TuNumeroAlumno"
+      }));
     };
 
-    connect();
-
-    return () => {
-      if (socketRef.current) socketRef.current.close();
-      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+    ws.current.onmessage = (e) => {
+      const message = JSON.parse(e.data);
+      onMessage(message);
     };
+
+    ws.current.onclose = () => console.log("WebSocket cerrado");
+    ws.current.onerror = (e) => console.error("Error WebSocket", e);
+
+    return () => ws.current.close();
   }, [onMessage]);
 
-  return socketRef;
+  return ws.current;
 };
