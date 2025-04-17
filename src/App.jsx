@@ -9,21 +9,25 @@ function App() {
   const [wsInstance, setWsInstance] = useState(null);
 
   const handleMessage = useCallback((message) => {
-    console.log("Mensaje recibido:", message); 
-  
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
-    
-      const types = message.satellites.map(sat => sat.type).filter(Boolean);
-      console.log(" Tipos únicos de satélites recibidos:", [...new Set(types)]);
+
+      if (message.satellites?.length > 0) {
+        console.log("📦 Satélite ejemplo recibido:", message.satellites[0]);
+
+        const types = message.satellites
+          .map(sat => sat.type)
+          .filter(Boolean);
+
+        console.log("Tipos únicos de satélites recibidos:", [...new Set(types)]);
+      }
     }
-    
-  
+
     if (message.type === "COMM") {
+      console.log("Mensaje COMM recibido:", message.message);
       setMessages((prev) => [...prev, message.message]);
     }
   }, []);
-  
 
   const ws = useWebSocket(handleMessage);
   if (ws && !wsInstance) setWsInstance(ws);
@@ -31,7 +35,9 @@ function App() {
   return (
     <>
       <GlobeView satellites={satellites} />
-      {wsInstance && <Chat ws={wsInstance} messages={messages} setMessages={setMessages} />}
+      {wsInstance && (
+        <Chat ws={wsInstance} messages={messages} setMessages={setMessages} />
+      )}
     </>
   );
 }
