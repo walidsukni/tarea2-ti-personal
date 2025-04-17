@@ -12,8 +12,8 @@ export const useWebSocket = (onMessage) => {
       console.log("WebSocket conectado");
       ws.current.send(JSON.stringify({
         type: "AUTH",
-        name: "TuNombreReal",
-        student_number: "TuNumeroAlumno"
+        name: "Walid Sukni",
+        student_number: "18626084"
       }));
     };
 
