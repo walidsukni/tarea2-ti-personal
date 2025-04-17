@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import Globe from "globe.gl";
 
 const typeColors = {
-  com: "red",
-  sci: "blue",
-  nav: "green",
-  spy: "orange",
+  COM: "red",
+  SCI: "blue",
+  NAV: "green",
+  SPY: "orange"
 };
 
 const antennas = [
@@ -50,11 +50,14 @@ const GlobeView = ({ satellites }) => {
   useEffect(() => {
     if (!globeInstance.current) return;
 
-    const satellitePoints = satellites.map((sat) => ({
-      lat: sat.position?.lat || 0,
-      lng: sat.position?.long || 0,
-      color: typeColors[sat.type?.toLowerCase()] || "gray"
-    }));
+    const satellitePoints = satellites.map((sat) => {
+      const typeKey = sat.type?.toUpperCase?.(); // Manejo robusto
+      return {
+        lat: sat.position?.lat || 0,
+        lng: sat.position?.long || 0,
+        color: typeColors[typeKey] || "gray"
+      };
+    });
 
     const antennaPoints = antennas.map((ant) => ({
       lat: ant.lat,
@@ -63,7 +66,6 @@ const GlobeView = ({ satellites }) => {
     }));
 
     const combinedPoints = [...satellitePoints, ...antennaPoints];
-
     globeInstance.current.pointsData(combinedPoints);
   }, [satellites]);
 

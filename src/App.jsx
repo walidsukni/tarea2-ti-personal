@@ -9,10 +9,12 @@ function App() {
   const [wsInstance, setWsInstance] = useState(null);
 
   const handleMessage = useCallback((message) => {
-    console.log("Mensaje recibido:", message); // 🔥 este log es esencial
+    console.log("Mensaje recibido:", message); 
   
     if (message.type === "POSITION_UPDATE") {
       setSatellites(message.satellites);
+      const types = message.satellites.map(s => s.type).filter(Boolean);
+      console.log("Tipos de satélites únicos:", [...new Set(types)]);
     }
   
     if (message.type === "COMM") {
